@@ -1,0 +1,40 @@
+version: '2'
+
+volumes:
+  influxdb-data:
+  dashboard-data:
+
+services:
+  grtl-power:
+    build: ./grtl-power
+    restart: always
+    privileged: true
+    network_mode: host
+
+  mqtt:
+    image: eclipse-mosquitto:1.6.15
+    restart: always
+    privileged: false
+    ports:
+      - '1883:1883'
+
+  connector:
+    image: balenablocks/connector:latest
+    restart: always
+    privileged: true
+
+  influxdb:
+    image: arm32v7/influxdb@sha256:2fed9b09a672cab330ac3ea1f03616e6821f2235bda64d549f605ef0d7081911
+    restart: always
+    privileged: false
+    volumes:
+      - 'influxdb-data:/var/lib/influxdb'
+
+  dashboard:
+    image: balenablocks/dashboard:latest
+    restart: always
+    privileged: false
+    volumes:
+      - 'dashboard-data:/data'
+    ports:
+      - '80'
