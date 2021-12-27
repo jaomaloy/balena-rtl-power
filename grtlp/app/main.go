@@ -66,9 +66,23 @@ func main() {
 		panic(token.Error())
 	}
 
+	lowerFreq := os.Getenv("LOWER_FREQ")
+	upperFreq := os.Getenv("UPPER_FREQ")
+	binSize := os.Getenv("BIN_SIZE")
+	interval := os.Getenv("INTERVAL")
+	exitTimer := os.Getenv("EXIT_TIMER")
+	tunerGain := os.Getenv("TUNER_GAIN")
+
+	frequency := lowerFreq + ":" + upperFreq + ":" + binSize
+
 	// execute the rtl_power comand with the environment variables
-	// TODO: set up environment variables for options
-	cmd := exec.Command("rtl_power", "-f", "860M:870M:200k", "-g", "10", "-i", "10s", "-e", "10m", "-")
+	// TODO: more enviroment variables and customization
+	cmd := exec.Command("rtl_power",
+		"-f", frequency,
+		"-g", tunerGain,
+		"-i", interval,
+		"-e", exitTimer,
+		"-")
 
 	// Get the command output per line
 	cmdReader, err := cmd.StdoutPipe()
