@@ -70,7 +70,6 @@ func main() {
 	upperFreq := os.Getenv("UPPER_FREQ")
 	binSize := os.Getenv("BIN_SIZE")
 	interval := os.Getenv("INTERVAL")
-	exitTimer := os.Getenv("EXIT_TIMER")
 	tunerGain := os.Getenv("TUNER_GAIN")
 
 	frequency := lowerFreq + ":" + upperFreq + ":" + binSize
@@ -81,7 +80,6 @@ func main() {
 		"-f", frequency,
 		"-g", tunerGain,
 		"-i", interval,
-		"-e", exitTimer,
 		"-")
 
 	// Get the command output per line
