@@ -66,12 +66,14 @@ func main() {
 		panic(token.Error())
 	}
 
+	// Load rtl_power variables
 	lowerFreq := os.Getenv("LOWER_FREQ")
 	upperFreq := os.Getenv("UPPER_FREQ")
 	binSize := os.Getenv("BIN_SIZE")
 	interval := os.Getenv("INTERVAL")
 	tunerGain := os.Getenv("TUNER_GAIN")
 
+	// combine frequency range and bin size for the command
 	frequency := lowerFreq + ":" + upperFreq + ":" + binSize
 
 	// execute the rtl_power comand with the environment variables
