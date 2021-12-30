@@ -1,15 +1,32 @@
 # Balena RTL Power
 - [Introduction](#introduction)
-- [Why not existing solutions?](#why-not-existing-solutions)
-- [Why not rtl_power alone?](#why-not-rtl_power-alone)
+    - [Why?](#why)
+    - [Why not existing solutions?](#why-not-existing-solutions)
+    - [Why not rtl_power alone?](#why-not-rtl_power-alone)
+- [Hardware needed](#hardware-needed)
 - [Design](#design)
 - [Usage](#usage)
 - [Customization](#customization)
 
-# Introduction
-Balena RTL Power, a project to visualize and analyze signal frequency bands in a more simple and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (RTL-SDR Blog v3), [rtl power](http://kmkeen.com/rtl-power/) and balena! Balena-rtl-power provides a good 
+## Introduction
+Balena RTL Power, a project to visualize and analyze signal frequency bands in a more simple and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (SDR), [rtl_power](http://kmkeen.com/rtl-power/) and balena!
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/jaomaloy/balena-rtl-power)
 
-## Why not existing solutions
+#### Why
+Common wireless systems rely on a some form of radio waves. These waves are differentiated by [frequency bands](https://www.jemengineering.com/blog-frequency-bands-and-applications/)(Hz) so that they have a particular use case that can fit the benefits of the band.
+![Satellite_frequency_bands_pillars](./images/satellite-frequency-bands-pillars.jpg)
+
+Lower frequency bands have a longer range but are more affected by obstructions and have less data bandwidth while Higher frequency bands have a shorter range but are less affected by signal obstructions and have more data bandwidth. For example, WLAN(WiFi) uses a high-frequency form of radio waves in either the 2.4 GHz, 5 GHz or the newer 6 GHz bands while applications like navigational radio beacons and transoceanic air traffic control use a much lower frequency band.
+
+Some other wireless systems that apply radio waves include:
+- The Things Network uses [these frequencies](https://www.thethingsnetwork.org/docs/lorawan/frequency-plans/) for LoRaWAN -- a network typically used for IoT and edge applications.
+- Amateur radio enthusiasts have their own frequency bands assigned to them thats specific to each country. For example, The Philippines uses [these frequencies](https://www.para.org.ph/frequency-allocations.html).
+- Wireless alarm systems commonly use either 315, 505, 418, 433.92, or 868 MHz frequencies.
+- 433MHz is used as the de-facto when doing home automation.
+
+The problem comes when trying to actually understand these various signals around you. You often need to either become a near expert or spend most of your time studying radio technology to fully grok it. Plus, you won't know if you may need specialized radio equipment. Why can't we have a flexible way to visualize it to have a point of entry in understanding these signals? e.g At this particular time(and/or location), this frequency band is the strongest by the looks of this graph because the color is stronger.
+
+#### Why not existing solutions
 Most tools often have a default display: the waterfall. This display has a steep learning curve in order to understand it. As a beginner to the space myself, I found it hard to see any other purpose of the SDR apart from listening in to radio frequencies using the display. That's just a few of the weaknesses I found using the existing tools but more can be found in the rtl_power [website](http://kmkeen.com/rtl-power/). To quote:
 
 > - Limited frequency display. Usually can't do more than your SDR's native bandwidth.
@@ -17,10 +34,20 @@ Most tools often have a default display: the waterfall. This display has a steep
 > - Limited FFT bins. Usually doesn't work so well when you want substantially more bins than your screen has pixels.
 > - Qualitative rendering. It is not easy to go from colors to dB.
 
-## Why not rtl_power alone
-- Balena's fleet management allows you to analyze multiple SDRs at different locations.
+#### Why not rtl_power alone
+- Balena's fleet management allows you to analyze multiple SDRs at different locations and analyze it all at the same time.
 - Configuration is easy, just change a few variables in the web dashboard and you're good to go.
 - Allows for a lot more extra use cases other than the heatmap.
+
+## Hardware needed
+This project has been tested using a Raspberry Pi 3A+ and an RTL_SDR Blog v3. It may support more so please let me know if you have tested it on other devices.
+
+- [Raspberry Pi 3A+](https://www.adafruit.com/product/4027)
+- A power supply for the RPi (like [this](https://www.adafruit.com/product/1995))
+- [Micro SD card, preferably a high-performance card like a SanDisk Extreme](https://www.amazon.com/SanDisk-Extreme-microSDHC-UHS-3-SDSQXAF-032G-GN6MA/dp/B06XWMQ81P)
+- [RTL-SDR Blog v3](https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/)
+
+.. and thats it!
 
 ## Design
 ![balena-rtl-power-cropped](./images/balena-rtl-power-cropped.png)
