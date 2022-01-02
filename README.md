@@ -3,14 +3,13 @@
     - [Why?](#why)
     - [Why not existing solutions?](#why-not-existing-solutions)
     - [Why not rtl_power alone?](#why-not-rtl_power-alone)
-- [Hardware needed](#hardware-needed)
+    - [What's needed?](#what-is-needed)
 - [Design](#design)
 - [Usage](#usage)
 - [Customization](#customization)
 
 ## Introduction
 Balena RTL Power, a project to visualize and analyze signal frequency bands in a more simple and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (SDR), [rtl_power](http://kmkeen.com/rtl-power/) and balena!
-[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/jaomaloy/balena-rtl-power)
 
 #### Why
 Common wireless systems rely on a some form of radio waves. These waves are differentiated by [frequency bands](https://www.jemengineering.com/blog-frequency-bands-and-applications/)(Hz) so that they have a particular use case that can fit the benefits of the band.
@@ -39,7 +38,8 @@ Most tools often have a default display: the waterfall. This display has a steep
 - Configuration is easy, just change a few variables in the web dashboard and you're good to go.
 - Allows for a lot more extra use cases other than the heatmap.
 
-## Hardware needed
+#### What is needed
+##### Hardware
 This project has been tested using a Raspberry Pi 3A+ and an RTL_SDR Blog v3. It may support more so please let me know if you have tested it on other devices.
 
 - [Raspberry Pi 3A+](https://www.adafruit.com/product/4027)
@@ -47,10 +47,17 @@ This project has been tested using a Raspberry Pi 3A+ and an RTL_SDR Blog v3. It
 - [Micro SD card, preferably a high-performance card like a SanDisk Extreme](https://www.amazon.com/SanDisk-Extreme-microSDHC-UHS-3-SDSQXAF-032G-GN6MA/dp/B06XWMQ81P)
 - [RTL-SDR Blog v3](https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/)
 
-.. and thats it!
+... and thats it!
+
+##### Software
+All you need to do is click the deploy button below:
+
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/jaomaloy/balena-rtl-power)
 
 ## Design
 ![balena-rtl-power-cropped](./images/balena-rtl-power-cropped.png)
+
+#### Components
 - RTL-SDR - A cheap SDR that's a great starting point in working with SDRs. An SDR is a useful and flexible system in which radio configuration is easily done through software where originally it was done through different hardware. Instead of 5 or more radio hardwares for analyzing low-band to high-band frequencies, you now only need an SDR. 
 - rtl_power - The software that configures how the SDR will operate. It configures what range of frequencies to cover, at what tuning, and also outputs the data that is being read.
 - grtlp - A wrapper function I wrote in Golang so that the data can be sent through MQTT by default.
