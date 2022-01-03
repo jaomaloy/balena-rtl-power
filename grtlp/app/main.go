@@ -13,6 +13,7 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/joho/godotenv"
 )
 
 var messagePubHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -43,6 +44,11 @@ func getDate(dateStrings []string) (date time.Time, err error) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// structure of data to be sent to influxdb through MQTT
 	type Data struct {
 		Date time.Time `json:"date"`
