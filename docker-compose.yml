@@ -5,8 +5,8 @@ volumes:
   dashboard-data:
 
 services:
-  grtl-power:
-    build: ./grtl-power
+  grtlp:
+    build: ./grtlp
     restart: always
     privileged: true
     network_mode: host
@@ -21,7 +21,12 @@ services:
   connector:
     image: balenablocks/connector:latest
     restart: always
+    labels:
+      io.balena.features.balena-api: '1' # necessary to discover services
+      io.balena.features.supervisor-api: 1  # necessary to discover services in local mode
     privileged: true
+    ports:
+      - "8080"
 
   influxdb:
     image: arm32v7/influxdb@sha256:2fed9b09a672cab330ac3ea1f03616e6821f2235bda64d549f605ef0d7081911
