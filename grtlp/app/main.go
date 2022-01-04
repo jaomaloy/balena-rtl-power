@@ -83,7 +83,6 @@ func main() {
 	frequency := lowerFreq + ":" + upperFreq + ":" + binSize
 
 	// execute the rtl_power comand with the environment variables
-	// TODO: more enviroment variables and customization
 	cmd := exec.Command("rtl_power",
 		"-f", frequency,
 		"-g", tunerGain,
@@ -127,13 +126,13 @@ func main() {
 
 			lowerBand, err := strconv.ParseFloat(dataArr[2], 64)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+				fmt.Fprintln(os.Stderr, "Could not parse lowerBand")
 				log.Fatal(err)
 			}
 
 			step, err := strconv.ParseFloat(dataArr[4], 64)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+				fmt.Fprintln(os.Stderr, "Could not parse step")
 				log.Fatal(err)
 			}
 
@@ -146,7 +145,7 @@ func main() {
 
 				dataFloat, err := strconv.ParseFloat(data, 64)
 				if err != nil {
-					fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+					fmt.Fprintln(os.Stderr, "Could not parse float data")
 					log.Fatal(err)
 				}
 
@@ -162,7 +161,7 @@ func main() {
 			d, err := json.Marshal(data)
 			fmt.Println(string(d))
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+				fmt.Fprintln(os.Stderr, "Could not Marshal data")
 				log.Fatal(err)
 				return
 			}
@@ -179,7 +178,7 @@ func main() {
 	// Start the command and check for errors
 	err = cmd.Start()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+		fmt.Fprintln(os.Stderr, "Could not start command")
 		log.Fatal(err)
 		return
 	}
@@ -190,7 +189,7 @@ func main() {
 	// Wait for the command to finish
 	err = cmd.Wait()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error creating stdoutpipe")
+		fmt.Fprintln(os.Stderr, "Could not wait for output")
 		log.Fatal(err)
 		return
 	}
