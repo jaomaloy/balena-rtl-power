@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-golang:latest-build AS build
+FROM balenalib/raspberrypi3-debian-golang:latest-build AS build
 
 WORKDIR /go/src/github.com/grtlp/app
 
@@ -9,10 +9,11 @@ RUN go mod init
 RUN go mod download
 
 RUN go get github.com/eclipse/paho.mqtt.golang
+RUN go get github.com/joho/godotenv
 
 RUN go build
 
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:build
+FROM balenalib/raspberrypi3-debian-golang:build
 
 RUN apt-get update
 RUN apt-get -y install libfftw3-dev cmake libusb-1.0-0-dev git
