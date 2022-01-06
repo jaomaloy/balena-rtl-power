@@ -36,7 +36,7 @@ services:
       - 'influxdb-data:/var/lib/influxdb'
 
   dashboard:
-    image: balenablocks/dashboard:latest
+    build: ./dashboard
     restart: always
     privileged: false
     volumes:
