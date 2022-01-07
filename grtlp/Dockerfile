@@ -23,9 +23,6 @@ COPY ./install.sh /usr/src/app/install.sh
 RUN ["chmod", "+x", "/usr/src/app/install.sh"]
 RUN ["/usr/src/app/install.sh"]
 
-COPY entry.sh /usr/src/app/entry.sh
-RUN ["chmod", "+x", "/usr/src/app/entry.sh"]
-
 COPY --from=build /go/src/github.com/grtlp/app .
 
 CMD ./app
