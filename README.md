@@ -1,4 +1,6 @@
 # Balena RTL Power
+![logo](./images/logo.png)
+
 - [Introduction](#introduction)
     - [Why?](#why)
     - [Why not existing solutions?](#why-not-existing-solutions)
@@ -9,10 +11,13 @@
 - [Customization](#customization)
 
 ## Introduction
-Balena RTL Power, a project to visualize and analyze signal frequency bands in a more simple and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (SDR), [rtl_power](http://kmkeen.com/rtl-power/) and balena!
+Balena RTL Power, a project to visualize and analyze signal frequency bands in a simpler and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (SDR), [rtl_power](http://kmkeen.com/rtl-power/) and balena!
+
+![actual-dashboard-full-2](./images/actual-dashboard-full-2.png)
+![actual-heatmap1-full](./images/actual-heatmap1-full.png)
 
 #### Why
-Common wireless systems rely on a some form of radio waves. These waves are differentiated by [frequency bands](https://www.jemengineering.com/blog-frequency-bands-and-applications/)(Hz) so that they have a particular use case that can fit the benefits of the band.
+Common wireless systems rely on some form of radio waves. These waves are differentiated by [frequency bands](https://www.jemengineering.com/blog-frequency-bands-and-applications/)(Hz) so that they have a particular use case that can fit the benefits of the band.
 ![Satellite_frequency_bands_pillars](./images/satellite-frequency-bands-pillars.jpg)
 
 Lower frequency bands have a longer range but are more affected by obstructions and have less data bandwidth while Higher frequency bands have a shorter range but are less affected by signal obstructions and have more data bandwidth. For example, WLAN(WiFi) uses a high-frequency form of radio waves in either the 2.4 GHz, 5 GHz or the newer 6 GHz bands while applications like navigational radio beacons and transoceanic air traffic control use a much lower frequency band.
@@ -23,7 +28,7 @@ Some other wireless systems that apply radio waves include:
 - Wireless alarm systems commonly use either 315, 505, 418, 433.92, or 868 MHz frequencies.
 - 433MHz is used as the de-facto when doing home automation.
 
-The problem comes when trying to actually understand these various signals around you. You often need to either become a near expert or spend most of your time studying radio technology to fully grok it. Plus, you won't know if you may need specialized radio equipment. Why can't we have a flexible way to visualize it to have a point of entry in understanding these signals? e.g At this particular time(and/or location), this frequency band is the strongest by the looks of this graph because the color is stronger.
+The problem comes when trying to understand these signals around you. You often need to either become a near expert or spend most of your time studying radio technology to fully grok it. Plus, you won't know if you may need specialized radio equipment. Why can't we have a flexible way to visualize it to have a point of entry in understanding these signals? e.g At this particular time(and/or location), this frequency band is the strongest by the looks of this graph because the color is stronger.
 
 #### Why not existing solutions
 Most tools often have a default display: the waterfall. This display has a steep learning curve in order to understand it. As a beginner to the space myself, I found it hard to see any other purpose of the SDR apart from listening in to radio frequencies using the display. That's just a few of the weaknesses I found using the existing tools but more can be found in the rtl_power [website](http://kmkeen.com/rtl-power/). To quote:
@@ -71,16 +76,9 @@ There are 3 main variables needed to be specified -- The lower and upper frequen
 
 To specify, add these device variables in the dashboard and specify the value for each. Values can be specified as an integer (89100000), a float (89.1e6) or as a metric suffix (89.1M). The bin size may be adjusted to make the math easier. Valid bin sizes are between 0.1Hz and 2.8MHz. Ranges may be any size. Default values are provided but it's not exactly useful for all cases.
 
+![bands-explained](./images/bands-explained.png)
+
 ## Customization
 `INTERVAL` - Change this value to change the sampling interval. Include short hand time modifiers such as *s* for seconds, *m* for minutes, *h* for hours. The default interval is 10 seconds (10s).
 
 `TUNER_GAIN` - Change this value to change the gain. Default is automatic configuration based on the dongle.
-
-### Current output of the project
-Displays a simple graph of the dbm for each frequency band:
-![current output](./images/current_output.png)
-
-### Future output of the project
-This output will primarily be a Grafana heatmap to properly visualize the power of each frequency band at a certain time. Each band will be its own row and the color intensity of a block will represent the power. Like this: 
-![heatmap_draft](./images/heatmap_draft.png)
-The top row is the higher frequency band and the lower frequency band is at the bottom row.
