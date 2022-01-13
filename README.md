@@ -47,12 +47,12 @@ Most tools often have a default display: the waterfall. This display has a steep
 ##### Hardware
 This project has been tested using a Raspberry Pi 3A+ and an RTL_SDR Blog v3. It may support more so please let me know if you have tested it on other devices.
 
-- [Raspberry Pi 3A+](https://www.adafruit.com/product/4027)
-- A power supply for the RPi (like [this](https://www.adafruit.com/product/1995))
-- [Micro SD card, preferably a high-performance card like a SanDisk Extreme](https://www.amazon.com/SanDisk-Extreme-microSDHC-UHS-3-SDSQXAF-032G-GN6MA/dp/B06XWMQ81P)
-- [RTL-SDR Blog v3](https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/)
+- [Raspberry Pi 3A+](https://www.adafruit.com/product/4027) ($25)
+- A power supply for the RPi (like [this](https://www.adafruit.com/product/1995)) ($8 - 9)
+- [Micro SD card, preferably a high-performance card like a SanDisk Extreme](https://www.amazon.com/SanDisk-Extreme-microSDHC-UHS-3-SDSQXAF-032G-GN6MA/dp/B06XWMQ81P) ($10 - 11)
+- [RTL-SDR Blog v3](https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/) ($40)
 
-... and thats it!
+... and that's it!
 
 ##### Software
 All you need to do is click the deploy button below:
@@ -63,22 +63,41 @@ All you need to do is click the deploy button below:
 ![balena-rtl-power-cropped](./images/balena-rtl-power-cropped.png)
 
 #### Components
-- RTL-SDR - A cheap SDR that's a great starting point in working with SDRs. An SDR is a useful and flexible system in which radio configuration is easily done through software where originally it was done through different hardware. Instead of 5 or more radio hardwares for analyzing low-band to high-band frequencies, you now only need an SDR. 
-- rtl_power - The software that configures how the SDR will operate. It configures what range of frequencies to cover, at what tuning, and also outputs the data that is being read.
-- grtlp - A wrapper function I wrote in Golang so that the data can be sent through MQTT by default.
-- MQTT - A lightweight messaging protocol that is suitable for IoT usecases.
-- Connector - A balena block that automatically connects data sources with data sinks e.g, mqtt to influxdb.
-- InfluxDB - InfluxDB is a time series database that is ideal for sensor readings or our signal power data.
-- Dashboard - The primary output of this project. We will be using balena-dash, which is a balena block that provides a Grafana dashboard where you can easily visualize your data on your browser.
+##### RTL-SDR Blog v3
+An SDR is a useful and flexible system in which radio configuration is easily done through software where originally it was done through different hardware components. Instead of 5 or more radio hardwares for analyzing low-band to high-band frequencies, you now only need an SDR and its supported software. RTL-SDR Blog v3 really cheap SDR that is great for beginners.
+ 
+##### rtl_power
+The software that configures how the SDR will operate. It configures what range of frequencies to cover, at what tuning, and also outputs the data that is being read. More useful and detailed information is on the [website](http://kmkeen.com/rtl-power/).
+
+##### `grtlp` service
+A service that wraps rtl_power and sends the output to an MQTT broker by default.
+
+##### `MQTT` service
+A lightweight messaging protocol that is suitable for IoT usecases.
+
+##### `Connector` block
+A balena block that automatically connects data sources with data sinks e.g, mqtt to influxdb. More details in the github [repo](https://github.com/balenablocks/connector)
+
+##### `InfluxDB` service
+InfluxDB is a time series database that is ideal for sensor readings or our signal power data.
+
+##### `Dashboard` block
+The primary output of this project. We will be using a custom fork of balena-dash, which is a balena block that provides a Grafana dashboard where you can easily visualize your data on your browser. I created, a [fork](https://github.com/jaomaloy/dashboard) of the block because of a custom dashboard template needed for the heatmap. Changes may be merged to the original block or I may just use the original [block](https://github.com/balenablocks/dashboard) if I can figure out a way to override the dashboard properly. In any case, this project's repository just links to the correct dashboard so you will not have to worry about it.
 
 ## Usage
-There are 3 main variables needed to be specified -- The lower and upper frequency band (`LOWER_FREQ` & `UPPER_FREQ`) and the bin size (`BIN_SIZE`).  In simpler terms, you determine the frequency range of the signals you want to study and then determine the size of each division for that range.
+The main thing you have to do when running the project will have to be setting 3 device variables for the `grtlp` service. The lower band (LOWER_BAND), upper band (UPPER_BAND), and bin size (BIN_SIZE). This is to tell rtl_power which range of frequency bands it has to scan (Lower band to Upper band) and what the sizes of each bin (Bin size) are. Default values are provided but it's not exactly useful for all cases.
 
-To specify, add these device variables in the dashboard and specify the value for each. Values can be specified as an integer (89100000), a float (89.1e6) or as a metric suffix (89.1M). The bin size may be adjusted to make the math easier. Valid bin sizes are between 0.1Hz and 2.8MHz. Ranges may be any size. Default values are provided but it's not exactly useful for all cases.
-
+To further explain this, take the default configuration 860MHz:870MHz:200kHz. We have a lower band of 860MHz and an upper band of 870MHz with a bin size of 200kHz. This means that we analyze the frequencies between 860MHz to 870MHz and we divide the range into 50 200kHz bins. Then, rtl_power scans for the strength of each bin.
 ![bands-explained](./images/bands-explained.png)
 
-## Customization
-`INTERVAL` - Change this value to change the sampling interval. Include short hand time modifiers such as *s* for seconds, *m* for minutes, *h* for hours. The default interval is 10 seconds (10s).
+Values can be specified as an integer (89100000), a float (89.1e6) or as a metric suffix (89.1M). The bin size may be adjusted to make the math easier but valid bin sizes are only between 0.1Hz and 2.8MHz. However, the ranges may be any size. 
 
-`TUNER_GAIN` - Change this value to change the gain. Default is automatic configuration based on the dongle.
+## Customization
+##### `grtlp` service
+- `INTERVAL` - Change this value to change the sampling interval. Include short hand time modifiers such as *s* for seconds, *m* for minutes, *h* for hours. The default interval is 10 seconds (10s).
+- `TUNER_GAIN` - Change this value to change the gain. Default is automatic configuration based on the dongle.
+
+## Next steps
+In the future, I want this project to support more descriptive displays in the dashboard as there are a lot more uses to rtl_power. It can analyze noise, detect radar and can even be used for radio astronomy -- All of which can use a different display other than the heatmap. If you have any suggestions or see any problems currently, creating an issue or even a PR would be appreciated.
+
+There is a lot of potential for Balena tech to support more usecases with SDRs. If you can think of more, make your own project/block and put it in the [hub](https://hub.balena.io/)!
