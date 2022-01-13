@@ -35,10 +35,9 @@ func getDate(dateStrings []string) (date time.Time, err error) {
 
 	date, err = time.Parse(layout, stringDate)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, "Could not parse date and time")
 		return time.Time{}, err
 	}
-	// fmt.Println(date)
 
 	return date, nil
 }
@@ -108,15 +107,9 @@ func main() {
 		for scanner.Scan() {
 			line := scanner.Text()
 			// TODO: debug: stdout output
-			// fmt.Println("rtl_power:", line)
 			// Clean up input, and separate strings into an array
 			outputLine := strings.ReplaceAll(line, " ", "")
 			dataArr := strings.Split(outputLine, ",")
-
-			// TODO: debug: slice data to type categories
-			fmt.Println("date and time:", dataArr[:2]) // type Time
-			fmt.Println("signal info:", dataArr[2:6])  // type Int
-			fmt.Println("signal data:", dataArr[6:])   // type Float
 
 			// get the date info from the stdout line
 			date, err := getDate(dataArr[:2])
@@ -141,7 +134,6 @@ func main() {
 			for i, data := range dataArr[6:] {
 				// get the data info and put it into a map of
 				result := (lowerBand + (step * float64(i)))
-				// fmt.Println(i, data, int(result))
 
 				dataFloat, err := strconv.ParseFloat(data, 64)
 				if err != nil {
