@@ -14,7 +14,7 @@ assets:
     type: blob.asset
     data:
       url: >-
-        https://github.com/jaomaloy/balena-rtl-power/blob/main/images/logo.png
+        https://raw.githubusercontent.com/jaomaloy/balena-rtl-power/main/images/logo-small.png
 data:
   applicationEnvironmentVariables:
     - LOWER_FREQ: 860M
