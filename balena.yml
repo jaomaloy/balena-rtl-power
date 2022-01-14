@@ -1,0 +1,27 @@
+name: balenaRTLPower
+type: sw.application
+description: >-
+  Analyze radio waves in your area using an SDR and Balena.
+joinable: false
+post-provisioning: >-
+  Check out [balenaRTLPower's Readme](https://github.com/jaomaloy/balena-rtl-power/blob/main/README.md).
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/jaomaloy/balena-rtl-power'
+  logo:
+    type: blob.asset
+    data:
+      url: >-
+        https://github.com/jaomaloy/balena-rtl-power/blob/main/images/logo.png
+data:
+  applicationEnvironmentVariables:
+    - LOWER_FREQ: 860M
+    - UPPER_FREQ: 870M
+    - BIN_SIZE: 200k
+    - INTERVAL: 10s
+    - TUNER_GAIN: 10
+  defaultDeviceType: raspberrypi3
+  supportedDeviceTypes:
+    - raspberrypi3
