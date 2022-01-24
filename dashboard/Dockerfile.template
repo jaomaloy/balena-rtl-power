@@ -1,0 +1,58 @@
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+FROM balenalib/$BALENA_ARCH-debian-python:3.7 as builder
+
+ARG BALENA_ARCH
+
+WORKDIR /usr/src/app
+
+COPY ./download.sh .
+
+# Download grafana deb file for current arch
+RUN  ./download.sh $BALENA_ARCH 
+
+RUN mkdir -p /usr/src/debian-rootfs
+
+# used to resolve package dependencies
+RUN install_packages apt-rdepends
+
+# Download required packages and dependencies
+# https://ostechnix.com/download-packages-dependencies-locally-ubuntu/
+RUN apt-get update && \
+      apt-get download \      
+      # libfontconfig1 \      
+      $(apt-rdepends python3  | grep -v "^ " | sed 's/debconf-2.0/debconf/g') \
+      $(apt-rdepends libfontconfig1  | grep -v "^ " | sed 's/fonts-freefont/fonts-freefont/g' | sed 's/debconf-2.0/debconf/g')
+
+RUN cp /tmp/grafana.deb ./
+
+# install deb files to different directory
+RUN for pkg in *.deb; \
+      do dpkg-deb  -x $pkg /usr/src/debian-rootfs; \
+      done
+
+WORKDIR /usr/src/app
+
+# install dependency required by update-dashboard script
+RUN pip install -t /usr/src/python-packages  stringcase
+
+
+FROM busybox:stable
+
+# copy contents
+COPY --from=builder /usr/src/debian-rootfs ./
+
+# copy python modules and files
+COPY --from=builder /usr/src/python-packages/ /usr/src/python-packages/
+
+COPY ./provisioning /usr/share/grafana/conf/provisioning
+
+COPY templates ./templates
+
+COPY ./entry.sh .
+
+COPY ./*.py ./
+
+COPY VERSION ./
+
+CMD ["sh","./entry.sh"]

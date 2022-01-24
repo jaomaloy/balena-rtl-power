@@ -1,0 +1,14 @@
+version: "2.1"
+
+volumes:
+  dashboard-data:
+  sense-data: {}
+
+services:
+  dashboard:
+    image: balenablocks/dashboard
+    restart: always
+    volumes:
+      - "dashboard-data:/data"
+    ports:
+      - "80"

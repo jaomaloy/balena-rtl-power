@@ -1,0 +1,45 @@
+{
+    "cards": {},
+    "color": {
+        "cardColor": "#F2495C",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "opacity"
+    },
+    "dataFormat": "tsbuckets",
+    "description": "",
+    "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 0
+    },
+    "heatmap": {},
+    "hideZeroBuckets": true,
+    "highlightCards": true,
+    "id": null,
+    "legend": {
+        "show": true
+    },
+    "reverseYBuckets": false,
+    "targets": [
+    ],
+    "title": "",
+    "tooltip": {
+        "show": true,
+        "showHistogram": true
+    },
+    "tooltipDecimals": 2,
+    "type": "heatmap",
+    "xAxis": {
+        "show": true
+    },
+    "xBucketSize": "",
+    "yAxis": {
+        "format": "short",
+        "logBase": 1,
+        "show": true
+    },
+    "yBucketBound": "auto"
+}
