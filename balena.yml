@@ -1,10 +1,10 @@
-name: balenaRTLPower
+name: balena-rtl-power
 type: sw.application
+joinable: false
 description: >-
   Analyze radio waves in your area using an SDR and Balena.
-joinable: false
 post-provisioning: >-
-  Check out [balenaRTLPower's Readme](https://github.com/jaomaloy/balena-rtl-power/blob/main/README.md).
+  Check out [balena-rtl-power's Readme](https://github.com/jaomaloy/balena-rtl-power/blob/main/README.md).
 assets:
   repository:
     type: blob.asset
