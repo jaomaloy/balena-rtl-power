@@ -10,9 +10,12 @@
     - [Why not existing solutions?](#why-not-existing-solutions)
     - [Why not rtl_power alone?](#why-not-rtl_power-alone)
     - [What's needed?](#what-is-needed)
+- [Deploying the fleet](#deploying-the-fleet)
+- [Usage and Customization](#usage-and-customization)
+    - [Customizing variables](#customizing-variables)
+    - [Viewing the heatmap](#viewing-the-heatmap)
 - [Design](#design)
-- [Usage](#usage)
-- [Customization](#customization)
+- [Next steps](#next-steps)
 
 ## Introduction
 Balena RTL Power, a project to visualize and analyze signal frequency bands in a simpler and general way. This uses a [Software Defined Radio](https://www.wirelessinnovation.org/assets/documents/SoftwareDefinedRadio.pdf) (SDR), [rtl_power](http://kmkeen.com/rtl-power/) and balena!
@@ -65,6 +68,44 @@ All you need to do is click the deploy button below:
 
 However, if you want to modify it, the repo is available on [github](https://github.com/jaomaloy/balena-rtl-power).
 
+## Deploying the fleet
+You will then be lead to creating a fleet in the balena dashboard. Choose `Raspberry Pi 3` as the default device type and then click `advanced` to further detail the configuration of the fleet. The [Usage and Customization](#usage-and-customization) section will explain all of the variables you see in the advanced page. You can change these values later on if you want to create the fleet first and worry about the configuration later.
+![deploy-fleet](./images/deploy-fleet.png)
+![deploy-fleet-advanced](./images/deploy-fleet-advanced.png)
+
+After deploying the fleet, you should see something like this:
+![fleet-dashboard](./images/fleet-dashboard.png)
+
+Now, it's time to add your device(s) to the fleet. Press `add device` on the dashboard and then select how you want your device image to be configured. We suggest selecting the `development` edition for first time users so you can iterate and develop locally. Afterwards, connect your SD Card to your PC and press `flash` to flash the image.
+![add-device](./images/add-device.png)
+
+Insert the newly flashed SD card to your device, turn it on, and you should see it in the dashboard in a few minutes.
+
+![deploy-sd](./images/deploy-sd.gif)
+
+## Usage and Customization
+### Customizing variables
+The main thing you have to do when running the project will have to be setting 3 device variables for the `grtlp` service. The lower band (LOWER_BAND), upper band (UPPER_BAND), and bin size (BIN_SIZE). This is to tell rtl_power which range of frequency bands it has to scan (Lower band to Upper band) and what the sizes of each bin (Bin size) are. Default values are provided but it's not exactly useful for all cases.
+
+To further explain this, take the default configuration 860MHz:870MHz:200kHz. We have a lower band of 860MHz and an upper band of 870MHz with a bin size of 200kHz. This means that we analyze the frequencies between 860MHz to 870MHz and we divide the range into 50 200kHz bins. Then, rtl_power scans for the strength of each bin.
+![bands-explained](./images/bands-explained.png)
+
+Values can be specified as an integer (89100000), a float (89.1e6) or as a metric suffix (89.1M). The bin size may be adjusted to make the math easier but valid bin sizes are only between 0.1Hz and 2.8MHz. However, the ranges may be any size. 
+
+##### List of all environment variables
+- `LOWER_BAND` - The lowest frequency band to sample.
+- `UPPER_BAND` - The highest frequency band to sample.
+- `BIN_SIZE` - The size of each frequency sampling bin.
+- `INTERVAL` - Change this value to change the sampling interval. Include short hand time modifiers such as *s* for seconds, *m* for minutes, *h* for hours. The default interval is 10 seconds (10s).
+- `TUNER_GAIN` - Change this value to change the gain. Default is automatic configuration based on the dongle.
+
+To edit these values in the dashboard, simply press `Variables` on the left column.
+
+### Viewing the heatmap
+To view the heatmap, press your device of choice and enable the `PUBLIC DEVICE URL`. This will give you a button link to access the grafana display of the device. Press the button and you should be lead to another webpage where the Grafana heatmap will be.
+![device-dash](./images/device-dash.png)
+![actual-dashboard-full-2](./images/actual-dashboard-full-2.png)
+
 ## Design
 ![balena-rtl-power-cropped](./images/balena-rtl-power-cropped.png)
 
@@ -89,19 +130,6 @@ InfluxDB is a time series database that is ideal for sensor readings or our sign
 
 ##### `Dashboard` block
 The primary output of this project. We will be using a custom fork of balena-dash, which is a balena block that provides a Grafana dashboard where you can easily visualize your data on your browser. I created, a [fork](https://github.com/jaomaloy/dashboard) of the block because of a custom dashboard template needed for the heatmap. Changes may be merged to the original block or I may just use the original [block](https://github.com/balenablocks/dashboard) if I can figure out a way to override the dashboard properly. In any case, this project's repository just links to the correct dashboard so you will not have to worry about it.
-
-## Usage
-The main thing you have to do when running the project will have to be setting 3 device variables for the `grtlp` service. The lower band (LOWER_BAND), upper band (UPPER_BAND), and bin size (BIN_SIZE). This is to tell rtl_power which range of frequency bands it has to scan (Lower band to Upper band) and what the sizes of each bin (Bin size) are. Default values are provided but it's not exactly useful for all cases.
-
-To further explain this, take the default configuration 860MHz:870MHz:200kHz. We have a lower band of 860MHz and an upper band of 870MHz with a bin size of 200kHz. This means that we analyze the frequencies between 860MHz to 870MHz and we divide the range into 50 200kHz bins. Then, rtl_power scans for the strength of each bin.
-![bands-explained](./images/bands-explained.png)
-
-Values can be specified as an integer (89100000), a float (89.1e6) or as a metric suffix (89.1M). The bin size may be adjusted to make the math easier but valid bin sizes are only between 0.1Hz and 2.8MHz. However, the ranges may be any size. 
-
-## Customization
-##### `grtlp` service
-- `INTERVAL` - Change this value to change the sampling interval. Include short hand time modifiers such as *s* for seconds, *m* for minutes, *h* for hours. The default interval is 10 seconds (10s).
-- `TUNER_GAIN` - Change this value to change the gain. Default is automatic configuration based on the dongle.
 
 ## Next steps
 In the future, I want this project to support more descriptive displays in the dashboard as there are a lot more uses to rtl_power. It can analyze noise, detect radar and can even be used for radio astronomy -- All of which can use a different display other than the heatmap. If you have any suggestions or see any problems currently, creating an issue or even a PR would be appreciated.
